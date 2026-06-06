@@ -9,29 +9,29 @@
     background: #f5f6fa;
     margin: 0;
     padding: 0;
-    font-size: 18px; /* 🔥 base mobile scale */
+    font-size: 22px; /* 🔥 BIG BASE */
   }
 
   h2 {
     text-align: center;
-    font-size: 26px; /* 🔥 bigger title like app header */
-    font-weight: 700;
-    margin: 18px 0;
+    font-size: 34px; /* 🔥 APP HEADER SIZE */
+    font-weight: 800;
+    margin: 20px 0;
   }
 
   .container {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     box-sizing: border-box;
   }
 
   .slot {
     width: 100%;
     background: white;
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
     box-sizing: border-box;
   }
 
@@ -39,14 +39,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 22px; /* 🔥 big time text */
-    font-weight: 700;
+    font-size: 28px; /* 🔥 VERY BIG TIME TEXT */
+    font-weight: 800;
   }
 
   .badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 18px; /* 🔥 BIG BADGE */
     background: #eee;
     white-space: nowrap;
   }
@@ -58,10 +58,10 @@
 
   .bar {
     width: 100%;
-    height: 16px; /* 🔥 thicker progress bar */
+    height: 22px; /* 🔥 THICK PROGRESS BAR */
     background: #eee;
-    border-radius: 8px;
-    margin: 14px 0;
+    border-radius: 12px;
+    margin: 18px 0;
     overflow: hidden;
   }
 
@@ -73,29 +73,29 @@
   }
 
   .info {
-    font-size: 16px;
+    font-size: 20px; /* 🔥 BIG INFO TEXT */
     color: #555;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
   }
 
   a {
-    font-size: 16px;
+    font-size: 20px;
     color: #007bff;
     text-decoration: none;
     display: inline-block;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
   }
 
   .btn {
     width: 100%;
-    padding: 16px; /* 🔥 taller touch button */
+    padding: 22px; /* 🔥 HUGE BUTTON */
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
     cursor: pointer;
     background: #007bff;
     color: white;
-    font-size: 18px; /* 🔥 bigger tap text */
-    font-weight: 700;
+    font-size: 22px; /* 🔥 BIG BUTTON TEXT */
+    font-weight: 800;
   }
 
   .btn:active {
@@ -107,18 +107,22 @@
     cursor: not-allowed;
   }
 
-  /* Extra mobile tuning */
   @media (max-width: 480px) {
     body {
-      font-size: 19px;
-    }
-
-    .slot-header {
-      font-size: 23px;
+      font-size: 24px;
     }
 
     h2 {
-      font-size: 28px;
+      font-size: 38px;
+    }
+
+    .slot-header {
+      font-size: 30px;
+    }
+
+    .btn {
+      font-size: 24px;
+      padding: 24px;
     }
   }
 </style>
@@ -126,7 +130,7 @@
 
 <body>
 
-<h2>📅 Available Slots(swedbanks sucks)</h2>
+<h2>📅 Available Slots(swedbanks sucks👨🏿)</h2>
 
 <div class="container" id="slots">Loading...</div>
 
