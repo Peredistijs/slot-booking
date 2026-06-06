@@ -1,6 +1,88 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <h1>Hello GitHub Pages works 🎉</h1>
-  </body>
-</html>
+<head>
+  <title>Slot Booking</title>
+</head>
+
+<body>
+
+<h2>Available Slots</h2>
+
+<div id="slots">Loading...</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Your Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDRVchRkNmDTfKN5meoSVLVFK-YeswY-Us",
+  authDomain: "slot-booking-5df6b.firebaseapp.com",
+  projectId: "slot-booking-5df6b",
+  storageBucket: "slot-booking-5df6b.firebasestorage.app",
+  messagingSenderId: "93670207614",
+  appId: "1:93670207614:web:acb827d6a0ab0c9ba5e82f"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Load slots
+async function loadSlots() {
+  const querySnapshot = await getDocs(collection(db, "slots"));
+
+  let html = "";
+
+  querySnapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const remaining = data.capacity - data.registered;
+
+    html += `
+      <div>
+        <b>${data.label}</b><br>
+        ${remaining} spots left<br>
+        <a href="${data.map}" target="_blank">Map</a><br>
+
+        <button onclick="register('${docSnap.id}', ${data.registered}, ${data.capacity})">
+          Register
+        </button>
+
+        <hr>
+      </div>
+    `;
+  });
+
+  document.getElementById("slots").innerHTML = html;
+}
+
+// Register function
+window.register = async function(slotId, registered, capacity) {
+
+  if (registered >= capacity) {
+    alert("Slot full");
+    return;
+  }
+
+  const name = prompt("Enter your name");
+  if (!name) return;
+
+  const ref = doc(db, "slots", slotId);
+
+  await updateDoc(ref, {
+    registered: increment(1)
+  });
+
+  alert("Registered!");
+  loadSlots();
+};
+
+loadSlots();
+</script>
