@@ -2,13 +2,103 @@
 <html>
 <head>
   <title>Slot Booking</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .slot {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .slot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      background: #eee;
+    }
+
+    .full {
+      background: #ff4d4f;
+      color: white;
+    }
+
+    .bar {
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 5px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #4caf50;
+      width: 0%;
+      transition: 0.3s;
+    }
+
+    .info {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      font-size: 14px;
+    }
+
+    .btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    a {
+      font-size: 13px;
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<h2>Available Slots</h2>
+<h2>📅 Available Slots</h2>
 
-<div id="slots">Loading...</div>
+<div class="container" id="slots">Loading...</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -21,7 +111,6 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDRVchRkNmDTfKN5meoSVLVFK-YeswY-Us",
   authDomain: "slot-booking-5df6b.firebaseapp.com",
@@ -31,11 +120,9 @@ const firebaseConfig = {
   appId: "1:93670207614:web:acb827d6a0ab0c9ba5e82f"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Load slots
 async function loadSlots() {
   const querySnapshot = await getDocs(collection(db, "slots"));
 
@@ -43,19 +130,41 @@ async function loadSlots() {
 
   querySnapshot.forEach((docSnap) => {
     const data = docSnap.data();
-    const remaining = data.capacity - data.registered;
+
+    const capacity = Number(data.capacity || 0);
+    const registered = Number(data.registered || 0);
+    const remaining = capacity - registered;
+
+    const percent = capacity > 0 ? (registered / capacity) * 100 : 0;
+    const isFull = registered >= capacity;
 
     html += `
-      <div>
-        <b>${data.label}</b><br>
-        ${remaining} spots left<br>
-        <a href="${data.map}" target="_blank">Map</a><br>
+      <div class="slot">
 
-        <button onclick="register('${docSnap.id}', ${data.registered}, ${data.capacity})">
-          Register
+        <div class="slot-header">
+          <div>🕒 ${data.label}</div>
+          <div class="badge ${isFull ? "full" : ""}">
+            ${isFull ? "FULL" : remaining + " spots"}
+          </div>
+        </div>
+
+        <div class="bar">
+          <div class="bar-fill" style="width:${percent}%"></div>
+        </div>
+
+        <div class="info">
+          ${registered} / ${capacity} booked
+        </div>
+
+        <a href="${data.map}" target="_blank">📍 View location</a>
+        <br><br>
+
+        <button class="btn"
+          ${isFull ? "disabled" : ""}
+          onclick="register('${docSnap.id}', ${registered}, ${capacity})">
+          ${isFull ? "Full" : "Book slot"}
         </button>
 
-        <hr>
       </div>
     `;
   });
@@ -63,7 +172,6 @@ async function loadSlots() {
   document.getElementById("slots").innerHTML = html;
 }
 
-// Register function
 window.register = async function(slotId, registered, capacity) {
 
   if (registered >= capacity) {
@@ -80,9 +188,11 @@ window.register = async function(slotId, registered, capacity) {
     registered: increment(1)
   });
 
-  alert("Registered!");
   loadSlots();
 };
 
 loadSlots();
 </script>
+
+</body>
+</html>
